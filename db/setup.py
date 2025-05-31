@@ -1,9 +1,10 @@
-from sqlalchemy import create_engine
-from models.game import Base
+# fmt: off
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
+from models.game import Base
+from sqlalchemy import create_engine
+# fmt: on
 
 engine = create_engine('sqlite:///db.sqlite3')
 
