@@ -1,8 +1,6 @@
 from models.game import Game
 from db.session import session
 
-from models.game import Game, session
-
 
 def seed_data():
     games = [
