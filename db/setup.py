@@ -1,7 +1,11 @@
 from sqlalchemy import create_engine
 from models.game import Base
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-engine = create_engine('sqlite:///games.db')
+
+engine = create_engine('sqlite:///db.sqlite3')
 
 Base.metadata.create_all(engine)
 print('The database is created with the Tables and Columns innit')
