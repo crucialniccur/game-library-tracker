@@ -7,3 +7,9 @@ def add_game(title, genre, platform):
     session.add(game)
     session.commit()
     print('Game : --{game}-- added succesfully')
+
+
+def list_games():
+    games = session.query(Game).all()
+    for game in games:
+        print(game)
