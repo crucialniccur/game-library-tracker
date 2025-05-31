@@ -17,7 +17,7 @@ def list_games():
 
 
 def delete_game(game_id):
-    game = session.query(Game).get(game_id)
+    game = session.get(Game, game_id)
     if game:
         session.delete(game)
         session.commit()
