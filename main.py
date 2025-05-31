@@ -1,4 +1,5 @@
-from models.game import Game, session
+from models.game import Game
+from db.session import session
 import argparse
 
 
