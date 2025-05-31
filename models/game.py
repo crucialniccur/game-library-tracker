@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import declarative_base
+from models.game import Game
+from db.session import session
 
 Base = declarative_base()
 
