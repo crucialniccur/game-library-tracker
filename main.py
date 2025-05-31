@@ -13,3 +13,13 @@ def list_games():
     games = session.query(Game).all()
     for game in games:
         print(game)
+
+
+def delete_game(game_id):
+    game = session.query(Game).get(game_id)
+    if game:
+        session.delete(game)
+        session.commit()
+        print(f'Deleted succesfully innit')
+    else:
+        print(f'No game found with id {game_id}')
