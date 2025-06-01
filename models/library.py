@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from datetime import datetime
 from db.base import Base
 
 
@@ -10,7 +9,6 @@ class Library(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
-    created_at = Column(DateTime, default=datetime.now)
 
     # Relationships
     user = relationship("User", back_populates="libraries")
@@ -26,8 +24,18 @@ class Library(Base):
         if game in self.games:
             self.games.remove(game)
 
+    def get_total_games(self):
+        return len(self.games)
+
+    def get_completed_games(self):
+        return len([game for game in self.games if game.completed])
+
     def get_completion_stats(self):
-        if not self.games:
-            return 0
-        completed = sum(1 for game in self.games if game.completed)
-        return (completed / len(self.games)) * 100
+        total = self.get_total_games()
+        if total == 0:
+            return 0.0
+        completed = self.get_completed_games()
+        return (completed / total) * 100
+
+    def get_total_play_time(self):
+        return sum(game.play_time or 0 for game in self.games)

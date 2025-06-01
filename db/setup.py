@@ -1,12 +1,11 @@
-# fmt: off
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from models.game import Base
 from sqlalchemy import create_engine
-# fmt: on
+from sqlalchemy.orm import sessionmaker
+from models.game import Base
 
-engine = create_engine('sqlite:///db.sqlite3')
+SQLALCHEMY_DATABASE_URL = "sqlite:///db/game_library.db"
 
-Base.metadata.create_all(engine)
-print('The database is created with the Tables and Columns innit')
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def init_db():
+    Base.metadata.create_all(bind=engine)

@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from datetime import datetime
 from db.base import Base
 
 
@@ -9,12 +8,11 @@ class Game(Base):
 
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
-    genre = Column(String)
-    platform = Column(String)
+    genre = Column(String, nullable=False)
+    platform = Column(String, nullable=False)
     completed = Column(Boolean, default=False)
+    play_time = Column(Integer, default=0)
     rating = Column(Integer)
-    play_time = Column(Integer, default=0)  # in minutes
-    last_played = Column(DateTime)
     library_id = Column(Integer, ForeignKey('libraries.id'))
 
     # Relationship
@@ -23,13 +21,11 @@ class Game(Base):
     def __repr__(self):
         return f"<Game(id={self.id}, title='{self.title}', platform='{self.platform}', completed={self.completed})>"
 
-    def mark_as_played(self, minutes=0):
-        self.last_played = datetime.now()
-        self.play_time += minutes
+    def mark_as_played(self, minutes):
+        if not isinstance(minutes, int) or minutes < 0:
+            raise ValueError("Play time must be a positive integer")
+        self.play_time = (self.play_time or 0) + minutes
 
     def toggle_completion(self):
-        # Get the current value from the database
-        current_completed = bool(self.completed)
-        # Toggle it
-        self.completed = not current_completed
+        self.completed = not self.completed
         return self.completed
