@@ -24,44 +24,52 @@ def display_menu():
     print("9. Exit")
     print("\nEnter your choice (1-9): ")
 
+def get_input(prompt, allow_empty=False):
+    """Get user input with optional empty check"""
+    while True:
+        value = input(prompt).strip()
+        if value or allow_empty:
+            return value
+        print("Error: Input cannot be empty. Please try again.")
+
 def main():
     while True:
         display_menu()
-        choice = input().strip()
+        choice = get_input("", allow_empty=True)
 
         if choice == "1":
             list_all_users()
         elif choice == "2":
-            username = input("Enter username: ")
+            username = get_input("Enter username: ")
             add_new_user(username)
         elif choice == "3":
-            name = input("Enter library name: ")
-            username = input("Enter username: ")
+            name = get_input("Enter library name: ")
+            username = get_input("Enter username: ")
             create_new_library(name, username)
         elif choice == "4":
             list_all_libraries()
         elif choice == "5":
-            title = input("Enter game title: ")
-            library = input("Enter library name: ")
-            completion = input("Enter completion percentage (0-100): ")
-            playtime = input("Enter playtime in hours: ")
-            rating = input("Enter rating (1-10): ")
+            title = get_input("Enter game title: ")
+            library = get_input("Enter library name: ")
+            completion = get_input("Enter completion percentage (0-100): ")
+            playtime = get_input("Enter playtime in hours: ")
+            rating = get_input("Enter rating (1-10): ")
             add_game_to_library(title, library, completion, playtime, rating)
         elif choice == "6":
-            library = input("Enter library name: ")
+            library = get_input("Enter library name: ")
             list_games_in_library(library)
         elif choice == "7":
-            title = input("Enter game title: ")
-            library = input("Enter library name: ")
+            title = get_input("Enter game title: ")
+            library = get_input("Enter library name: ")
             delete_game_from_library(title, library)
         elif choice == "8":
-            library = input("Enter library name: ")
+            library = get_input("Enter library name: ")
             view_library_stats(library)
         elif choice == "9":
             print("Thank you for using Game Library Tracker!")
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice. Please enter a number between 1 and 9.")
 
 if __name__ == "__main__":
     main()
