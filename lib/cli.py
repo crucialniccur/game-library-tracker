@@ -12,7 +12,7 @@ from helpers import (
 )
 
 def display_menu():
-    """Display the main menu options"""
+    """Display the main menu"""
     print("\n=== Game Library Tracker ===")
     print("1. List all users")
     print("2. Add new user")
@@ -21,9 +21,8 @@ def display_menu():
     print("5. Add game to library")
     print("6. List games in library")
     print("7. Delete game")
-    print("8. View library statistics")
     print("0. Exit")
-    print("\nEnter your choice: ")
+    print("\nEnter your choice: ", end="")
 
 def get_user_input(prompt):
     """Get user input with validation"""
@@ -69,10 +68,6 @@ def main():
             title = get_user_input("Enter game title: ")
             library = get_user_input("Enter library name: ")
             delete_game_from_library(title, library)
-
-        elif choice == "8":
-            library = get_user_input("Enter library name: ")
-            view_library_stats(library)
 
         elif choice == "0":
             print("Thank you for using Game Library Tracker!")

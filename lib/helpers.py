@@ -7,9 +7,10 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models import User, Library, Game
+from config import SQLALCHEMY_DATABASE_URL
 
 # Create database engine and session
-engine = create_engine('sqlite:///game_library.db')
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 Session = sessionmaker(bind=engine)
 
 def validate_username(username):
@@ -68,8 +69,8 @@ def validate_rating(rating):
     """Validate rating input"""
     try:
         rating_int = int(rating)
-        if rating_int < 1 or rating_int > 10:
-            return False, "Rating must be between 1 and 10"
+        if rating_int < 1 or rating_int > 5:
+            return False, "Rating must be between 1 and 5"
         return True, None
     except ValueError:
         return False, "Rating must be a whole number"
@@ -205,8 +206,8 @@ def add_game_to_library(title, library_name, completion, playtime, rating):
     finally:
         session.close()
 
-def list_games_in_library(library_name, completed=None, platform=None, genre=None):
-    """List games in a library with optional filters"""
+def list_games_in_library(library_name):
+    """List games in a library"""
     session = Session()
     try:
         library = session.query(Library).filter_by(title=library_name).first()
@@ -214,28 +215,17 @@ def list_games_in_library(library_name, completed=None, platform=None, genre=Non
             print(f"Error: Library '{library_name}' not found")
             return False
 
-        # Build query with filters
-        query = session.query(Game).filter_by(library_id=library.id)
-
-        if completed is not None:
-            query = query.filter(Game.completion_rate == (100 if completed else 0))
-        if platform:
-            query = query.filter(Game.platform == platform)
-        if genre:
-            query = query.filter(Game.genre == genre)
-
-        games = query.all()
+        games = library.games
 
         if games:
             print(f"\nGames in library '{library_name}':")
             for game in games:
-                completion_status = "✓" if game.completion_rate == 100 else "✗"
                 print(f"- {game.title} "
                       f"Rating: {game.rating}/5 | "
                       f"Playtime: {game.playtime_hours}h | "
                       f"Completion: {game.completion_rate}%")
         else:
-            print(f"No games found in library '{library_name}' with the specified filters.")
+            print(f"No games found in library '{library_name}'.")
         return True
     except Exception as e:
         print(f"Error: {str(e)}")
@@ -271,28 +261,3 @@ def delete_game_from_library(title, library_name):
         return False
     finally:
         session.close()
-
-def view_library_stats(library_name):
-    """View statistics for a library"""
-    session = Session()
-    library = session.query(Library).filter_by(title=library_name).first()
-    if not library:
-        print(f"Error: Library '{library_name}' not found")
-        return False
-
-    games = library.games
-    if games:
-        total_games = len(games)
-        avg_completion = sum(game.completion_rate for game in games) / total_games
-        total_playtime = sum(game.playtime_hours for game in games)
-        avg_rating = sum(game.rating for game in games) / total_games
-
-        print(f"\nStatistics for {library_name}:")
-        print(f"Total Games: {total_games}")
-        print(f"Average Completion Rate: {avg_completion:.1f}%")
-        print(f"Total Playtime: {total_playtime:.1f} hours")
-        print(f"Average Rating: {avg_rating:.1f}/10")
-    else:
-        print(f"No games found in library '{library_name}'.")
-    session.close()
-    return True
