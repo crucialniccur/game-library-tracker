@@ -20,8 +20,6 @@ def validate_username(username):
         return False, "Username must be at least 3 characters long"
     if len(username) > 50:
         return False, "Username must be less than 50 characters"
-    if not username.replace("_", "").isalnum():
-        return False, "Username can only contain letters, numbers, and underscores"
     return True, None
 
 def validate_library_name(name):
@@ -83,7 +81,7 @@ def list_all_users():
     if users:
         print("\nUsers:")
         for user in users:
-            print(f"- {user.username}")
+            print(f"- {user.name}")
     else:
         print("No users found.")
     session.close()
@@ -99,12 +97,12 @@ def add_new_user(username):
     session = Session()
     try:
         # Check if username already exists
-        existing_user = session.query(User).filter_by(username=username).first()
+        existing_user = session.query(User).filter_by(name=username).first()
         if existing_user:
             print(f"Error: Username '{username}' already exists")
             return False
 
-        user = User(username=username)
+        user = User(name=username)
         session.add(user)
         session.commit()
         print(f"User '{username}' added successfully!")
@@ -127,7 +125,7 @@ def create_new_library(name, username):
     session = Session()
     try:
         # Check if library name already exists for the user
-        user = session.query(User).filter_by(username=username).first()
+        user = session.query(User).filter_by(name=username).first()
         if not user:
             print(f"Error: User '{username}' not found")
             return False
