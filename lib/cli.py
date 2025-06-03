@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 
-from helpers import (
+import sys
+import os
+
+# Add the project root directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from lib.helpers import (
     list_all_users,
     add_new_user,
     create_new_library,
     list_all_libraries,
     add_game_to_library,
     list_games_in_library,
-    delete_game_from_library,
-    view_library_stats
+    delete_game_from_library
 )
 
 def display_menu():

@@ -7,10 +7,10 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models import User, Library, Game
-from config import SQLALCHEMY_DATABASE_URL
+from config import DATABASE_URL
 
 # Create database engine and session
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(DATABASE_URL)
 Session = sessionmaker(bind=engine)
 
 def validate_username(username):
