@@ -48,53 +48,44 @@ alembic upgrade head
 
 ## Usage
 
+The application provides a command-line interface with various commands. Here are the available commands:
+
 ### User Management
 ```bash
-# Add a new user (username must be 3-50 characters)
-python main.py add-user "John Doe"
-
 # List all users
-python main.py list-users
+game-tracker users
+
+# Add a new user
+game-tracker add-user "John Doe"
 ```
 
 ### Library Management
 ```bash
-# Add a new library (requires valid user_id)
-python main.py add-library "PC Games" 1
+# Create a new library for a user
+game-tracker create-library "PC Games" "John Doe"
 
 # List all libraries
-python main.py list-libraries
-
-# List libraries for a specific user
-python main.py list-libraries --user-id 1
+game-tracker libraries
 ```
 
 ### Game Management
 ```bash
-# Add a new game (rating must be between 1-5)
-python main.py add-game "The Witcher 3" "RPG" "PC" 1 --rating 5
+# Add a new game with optional parameters
+game-tracker add-game "The Witcher 3" "PC Games" --completion 75 --playtime 120.5 --rating 5
 
-# List games (supports various filters)
-python main.py list-games
-python main.py list-games --library-id 1
-python main.py list-games --completed
-python main.py list-games --platform "PC"
-python main.py list-games --genre "RPG"
-
-# Update game completion status
-python main.py mark-game 1 --completed
-
-# Record play time (in minutes)
-python main.py play-game 1 120
+# List games with various filters
+game-tracker list-games "PC Games"
+game-tracker list-games "PC Games" --completed
+game-tracker list-games "PC Games" --platform "PC" --genre "RPG"
 
 # Delete a game
-python main.py delete-game 1
+game-tracker delete-game "The Witcher 3" "PC Games"
 ```
 
 ### Statistics
 ```bash
-# View library statistics (requires library_id)
-python main.py stats 1
+# View library statistics
+game-tracker stats "PC Games"
 ```
 
 ## Input Validation

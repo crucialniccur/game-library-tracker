@@ -201,25 +201,43 @@ def add_game_to_library(title, library_name, completion, playtime, rating):
     finally:
         session.close()
 
-def list_games_in_library(library_name):
-    """List all games in a library"""
+def list_games_in_library(library_name, completed=None, platform=None, genre=None):
+    """List games in a library with optional filters"""
     session = Session()
-    library = session.query(Library).filter_by(name=library_name).first()
-    if not library:
-        print(f"Error: Library '{library_name}' not found")
-        return False
+    try:
+        library = session.query(Library).filter_by(name=library_name).first()
+        if not library:
+            print(f"Error: Library '{library_name}' not found")
+            return False
 
-    if library.games:
-        print(f"\nGames in {library_name}:")
-        for game in library.games:
-            print(f"- {game.title}")
-            print(f"  Completion: {game.completion_rate}%")
-            print(f"  Playtime: {game.playtime_hours} hours")
-            print(f"  Rating: {game.rating}/10")
-    else:
-        print(f"No games found in library '{library_name}'.")
-    session.close()
-    return True
+        # Build query with filters
+        query = session.query(Game).filter_by(library_id=library.id)
+
+        if completed is not None:
+            query = query.filter(Game.completed == completed)
+        if platform:
+            query = query.filter(Game.platform == platform)
+        if genre:
+            query = query.filter(Game.genre == genre)
+
+        games = query.all()
+
+        if games:
+            print(f"\nGames in library '{library_name}':")
+            for game in games:
+                completion_status = "✓" if game.completed else "✗"
+                print(f"- {game.title} [{game.platform}] ({game.genre}) "
+                      f"Rating: {game.rating}/5 | "
+                      f"Playtime: {game.playtime_hours}h | "
+                      f"Completed: {completion_status}")
+        else:
+            print(f"No games found in library '{library_name}' with the specified filters.")
+        return True
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return False
+    finally:
+        session.close()
 
 def delete_game_from_library(title, library_name):
     """Delete a game from a library"""
