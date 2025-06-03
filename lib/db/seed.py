@@ -19,9 +19,9 @@ def seed_database():
         session.commit()
 
         # Create libraries
-        pc_library = Library(name="PC Games", user=user1)
-        console_library = Library(name="Console Games", user=user1)
-        mobile_library = Library(name="Mobile Games", user=user2)
+        pc_library = Library(title="PC Games", user=user1)
+        console_library = Library(title="Console Games", user=user1)
+        mobile_library = Library(title="Mobile Games", user=user2)
         session.add_all([pc_library, console_library, mobile_library])
         session.commit()
 

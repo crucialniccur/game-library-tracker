@@ -81,7 +81,7 @@ def list_all_users():
     if users:
         print("\nUsers:")
         for user in users:
-            print(f"- {user.name}")
+            print(f"- {user.username}")
     else:
         print("No users found.")
     session.close()
@@ -97,12 +97,12 @@ def add_new_user(username):
     session = Session()
     try:
         # Check if username already exists
-        existing_user = session.query(User).filter_by(name=username).first()
+        existing_user = session.query(User).filter_by(username=username).first()
         if existing_user:
             print(f"Error: Username '{username}' already exists")
             return False
 
-        user = User(name=username)
+        user = User(username=username)
         session.add(user)
         session.commit()
         print(f"User '{username}' added successfully!")
@@ -125,17 +125,17 @@ def create_new_library(name, username):
     session = Session()
     try:
         # Check if library name already exists for the user
-        user = session.query(User).filter_by(name=username).first()
+        user = session.query(User).filter_by(username=username).first()
         if not user:
             print(f"Error: User '{username}' not found")
             return False
 
-        existing_library = session.query(Library).filter_by(name=name, user_id=user.id).first()
+        existing_library = session.query(Library).filter_by(title=name, user_id=user.id).first()
         if existing_library:
             print(f"Error: Library '{name}' already exists for user '{username}'")
             return False
 
-        library = Library(name=name, user=user)
+        library = Library(title=name, user=user)
         session.add(library)
         session.commit()
         print(f"Library '{name}' created for user '{username}'!")
@@ -154,7 +154,7 @@ def list_all_libraries():
     if libraries:
         print("\nLibraries:")
         for library in libraries:
-            print(f"- {library.name} (Owner: {library.user.username})")
+            print(f"- {library.title} (Owner: {library.user.username})")
     else:
         print("No libraries found.")
     session.close()
@@ -176,7 +176,7 @@ def add_game_to_library(title, library_name, completion, playtime, rating):
 
     session = Session()
     try:
-        library = session.query(Library).filter_by(name=library_name).first()
+        library = session.query(Library).filter_by(title=library_name).first()
         if not library:
             print(f"Error: Library '{library_name}' not found")
             return False
@@ -209,7 +209,7 @@ def list_games_in_library(library_name, completed=None, platform=None, genre=Non
     """List games in a library with optional filters"""
     session = Session()
     try:
-        library = session.query(Library).filter_by(name=library_name).first()
+        library = session.query(Library).filter_by(title=library_name).first()
         if not library:
             print(f"Error: Library '{library_name}' not found")
             return False
@@ -218,7 +218,7 @@ def list_games_in_library(library_name, completed=None, platform=None, genre=Non
         query = session.query(Game).filter_by(library_id=library.id)
 
         if completed is not None:
-            query = query.filter(Game.completed == completed)
+            query = query.filter(Game.completion_rate == (100 if completed else 0))
         if platform:
             query = query.filter(Game.platform == platform)
         if genre:
@@ -229,11 +229,11 @@ def list_games_in_library(library_name, completed=None, platform=None, genre=Non
         if games:
             print(f"\nGames in library '{library_name}':")
             for game in games:
-                completion_status = "✓" if game.completed else "✗"
-                print(f"- {game.title} [{game.platform}] ({game.genre}) "
+                completion_status = "✓" if game.completion_rate == 100 else "✗"
+                print(f"- {game.title} "
                       f"Rating: {game.rating}/5 | "
                       f"Playtime: {game.playtime_hours}h | "
-                      f"Completed: {completion_status}")
+                      f"Completion: {game.completion_rate}%")
         else:
             print(f"No games found in library '{library_name}' with the specified filters.")
         return True
@@ -251,7 +251,7 @@ def delete_game_from_library(title, library_name):
 
     session = Session()
     try:
-        library = session.query(Library).filter_by(name=library_name).first()
+        library = session.query(Library).filter_by(title=library_name).first()
         if not library:
             print(f"Error: Library '{library_name}' not found")
             return False
@@ -275,7 +275,7 @@ def delete_game_from_library(title, library_name):
 def view_library_stats(library_name):
     """View statistics for a library"""
     session = Session()
-    library = session.query(Library).filter_by(name=library_name).first()
+    library = session.query(Library).filter_by(title=library_name).first()
     if not library:
         print(f"Error: Library '{library_name}' not found")
         return False

@@ -7,19 +7,19 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
+    username = Column(String, nullable=False)
 
     # Relationships
     libraries = relationship("Library", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<User(id={self.id}, name='{self.name}')>"
+        return f"<User(id={self.id}, username='{self.username}')>"
 
     def get_total_games(self):
         return sum(len(library.games) for library in self.libraries)
 
     def get_completed_games(self):
-        return sum(len([game for game in library.games if game.completed]) for library in self.libraries)
+        return sum(len([game for game in library.games if game.completion_rate == 100]) for library in self.libraries)
 
     def get_completion_rate(self):
         total = self.get_total_games()
@@ -31,5 +31,5 @@ class User(Base):
         total = 0
         for library in self.libraries:
             for game in library.games:
-                total += game.play_time or 0
+                total += game.playtime_hours or 0
         return total
