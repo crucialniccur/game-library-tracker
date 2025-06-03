@@ -33,7 +33,7 @@ def get_user_input(prompt):
             return value
         print("Input cannot be empty. Please try again.")
 
-if __name__ == "__main__":
+def main():
     while True:
         display_menu()
         choice = input().strip()
@@ -80,3 +80,6 @@ if __name__ == "__main__":
 
         else:
             print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()

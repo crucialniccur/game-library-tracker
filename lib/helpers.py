@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from lib.db.models import User, Library, Game
+from models import User, Library, Game
 
 # Create database engine and session
 engine = create_engine('sqlite:///game_library.db')
