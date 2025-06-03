@@ -1,56 +1,42 @@
-from db.session import get_db
-from models.user import User
-from models.library import Library
-from models.game import Game
-from datetime import datetime
+#!/usr/bin/env python3
 
-def seed_database():
-    db = next(get_db())
+from app.database import get_session
+from app.models import User, Library, Game
+
+def seed_data():
+    """Add sample data to the database"""
+    session = get_session()
+
+    # Clear existing data
+    session.query(Game).delete()
+    session.query(Library).delete()
+    session.query(User).delete()
+    session.commit()
 
     # Create users
-    john = User(name="John Doe")
-    jane = User(name="Jane Smith")
-    db.add_all([john, jane])
-    db.commit()
+    john = User(username="john_doe")
+    alice = User(username="alice_smith")
+    session.add_all([john, alice])
+    session.commit()
 
     # Create libraries
-    pc_lib = Library(title="PC Games", user_id=john.id)
-    console_lib = Library(title="Console Games", user_id=john.id)
-    mobile_lib = Library(title="Mobile Games", user_id=jane.id)
-    db.add_all([pc_lib, console_lib, mobile_lib])
-    db.commit()
+    pc_lib = Library(title="PC Games", user=john)
+    console_lib = Library(title="Console Games", user=john)
+    mobile_lib = Library(title="Mobile Games", user=alice)
+    session.add_all([pc_lib, console_lib, mobile_lib])
+    session.commit()
 
-    # Create games
+    # Add games
     games = [
-        Game(
-            title="The Witcher 3",
-            genre="RPG",
-            platform="PC",
-            rating=5,
-            library_id=pc_lib.id
-        ),
-        Game(
-            title="Red Dead Redemption 2",
-            genre="Action",
-            platform="PS4",
-            rating=5,
-            library_id=console_lib.id
-        ),
-        Game(
-            title="Monument Valley",
-            genre="Puzzle",
-            platform="iOS",
-            rating=4,
-            library_id=mobile_lib.id,
-            completed=True,
-            play_time=120,
-            last_played=datetime.now()
-        )
+        Game(title="The Witcher 3", library=pc_lib),
+        Game(title="Cyberpunk 2077", library=pc_lib),
+        Game(title="God of War", library=console_lib),
+        Game(title="Pokemon GO", library=mobile_lib)
     ]
-    db.add_all(games)
-    db.commit()
+    session.add_all(games)
+    session.commit()
 
-    print("Database seeded!")
+    print("Database seeded successfully!")
 
 if __name__ == "__main__":
-    seed_database()
+    seed_data()

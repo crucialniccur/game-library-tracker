@@ -1,28 +1,17 @@
 # Game Library Manager
 
-A simple CLI application to manage users and their game libraries. This application demonstrates a one-to-many relationship between users and libraries.
+A simple CLI application to manage game libraries. Users can create libraries and add games to them.
 
 ## Features
 
-- Create and manage users
-- Create and manage libraries for users
-- List all users and their libraries
-- Delete users (cascades to their libraries)
-- Delete individual libraries
-
-## Database Structure
-
-- **User**: Represents a user who can own multiple libraries
-  - Has a one-to-many relationship with Library
-  - When a user is deleted, all their libraries are deleted too
-
-- **Library**: Represents a game library owned by a user
-  - Has a many-to-one relationship with User
-  - Each library belongs to exactly one user
+- Create users
+- Create game libraries for users
+- Add games to libraries
+- View all data in a hierarchical structure
 
 ## Setup
 
-1. Create a virtual environment:
+1. Create and activate virtual environment:
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -30,17 +19,61 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 2. Install dependencies:
 ```bash
-pip install sqlalchemy
+pip install -r requirements.txt
 ```
 
-3. Initialize the database:
+3. Seed the database with sample data:
 ```bash
-python -m lib.db.init_db
+python seed.py
 ```
 
 4. Run the application:
 ```bash
-python -m lib.cli
+python -m app.cli
+```
+
+## Usage Example
+
+```
+=== Game Library Manager ===
+1. Create User
+2. Create Library
+3. Add Game
+4. View All
+0. Exit
+
+Choose an option: 4
+
+User: john_doe
+  Library: PC Games
+    Game: The Witcher 3
+    Game: Cyberpunk 2077
+  Library: Console Games
+    Game: God of War
+
+User: alice_smith
+  Library: Mobile Games
+    Game: Pokemon GO
+```
+
+## Project Structure
+
+```
+game-library-tracker/
+├── lib/                    # Main package directory
+│   ├── __init__.py
+│   ├── cli.py             # CLI interface
+│   └── db/                # Database related code
+│       ├── __init__.py
+│       ├── database.py    # Database connection
+│       ├── init_db.py     # Database initialization
+│       └── models.py      # SQLAlchemy models
+├── .gitignore             # Git ignore file
+├── README.md              # Project documentation
+├── requirements.txt       # Python dependencies
+├── Pipfile               # Pipenv dependencies
+├── seed.py               # Database seeder
+└── alembic.ini           # Alembic migrations config
 ```
 
 ## Usage
@@ -48,11 +81,9 @@ python -m lib.cli
 The application provides a simple menu-driven interface:
 
 1. Create User - Create a new user with a unique username
-2. List Users - Display all users and their libraries
-3. Create Library - Create a new library for a specific user
-4. List Libraries - Display all libraries or libraries for a specific user
-5. Delete User - Delete a user and all their libraries
-6. Delete Library - Delete a specific library
+2. Create Library - Create a new library for a specific user
+3. Add Game - Add a game to a specific library
+4. View All - View all users and their libraries
 0. Exit - Exit the application
 
 ## Example
@@ -60,67 +91,43 @@ The application provides a simple menu-driven interface:
 ```bash
 === Game Library Manager ===
 1. Create User
-2. List Users
-3. Create Library
-4. List Libraries
-5. Delete User
-6. Delete Library
+2. Create Library
+3. Add Game
+4. View All
 0. Exit
 
-Enter your choice (0-6): 1
-Enter username: john_doe
-
-Enter your choice (0-6): 3
-Enter user ID: 1
-Enter library title: PC Games
-
-Enter your choice (0-6): 2
+Enter your choice (0-4): 4
 Users:
-- john_doe (ID: 1)
+- john_gamer (ID: 1)
   Libraries:
     - PC Games
+    - PlayStation Games
+- alice_player (ID: 2)
+  Libraries:
+    - Nintendo Switch
+    - Mobile Games
+- bob_games (ID: 3)
+  Libraries:
+    - Xbox Collection
 ```
-
-## Input Validation
-
-The application includes validation for:
-- Usernames (3-50 characters)
-- Library names (1-100 characters)
-- Game titles (1-100 characters)
-- Completion status (boolean)
-- Play time (positive integer)
-- Ratings (1-5)
 
 ## Database Schema
 
 ### Users
 - id (Primary Key)
-- name (String)
-- created_at (DateTime)
+- username (String, Unique)
 
 ### Libraries
 - id (Primary Key)
 - title (String)
-- user_id (Foreign Key)
-- created_at (DateTime)
-
-### Games
-- id (Primary Key)
-- title (String)
-- genre (String)
-- platform (String)
-- completed (Boolean)
-- rating (Integer)
-- play_time (Integer)
-- last_played (DateTime)
-- library_id (Foreign Key)
+- user_id (Foreign Key to Users)
 
 ## Error Handling
 
-The application includes comprehensive error handling for:
-- Invalid input validation
-- Database constraints
-- Non-existent resources
-- Invalid operations
+The application includes error handling for:
+- Duplicate usernames
+- Invalid user IDs
+- Invalid library IDs
+- Database connection issues
 
-All errors are displayed with clear, user-friendly messages to help troubleshoot issues.
+All errors are displayed with clear, user-friendly messages.
