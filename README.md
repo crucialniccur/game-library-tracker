@@ -24,7 +24,7 @@ A command-line interface (CLI) application to manage your video game collection 
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone [<repository-url>](https://github.com/crucialniccur/game-library-tracker)
 cd game-library-tracker
 ```
 
