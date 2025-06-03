@@ -1,91 +1,84 @@
-# Game Library Tracker
+# Game Library Manager
 
-A command-line interface (CLI) application to manage your video game collection across multiple libraries.
+A simple CLI application to manage users and their game libraries. This application demonstrates a one-to-many relationship between users and libraries.
 
 ## Features
 
-- User Management
-  - Create and manage users
-  - List all users in the system
-- Library Management
-  - Create and manage game libraries for each user
-  - View library statistics and details
-- Game Management
-  - Add games with validated information (title, genre, platform, rating)
-  - Track game completion status
-  - Record and update play time
-  - Remove games from libraries
-- Statistics
-  - View completion rates for libraries
-  - Track total play time
-  - Calculate average ratings
+- Create and manage users
+- Create and manage libraries for users
+- List all users and their libraries
+- Delete users (cascades to their libraries)
+- Delete individual libraries
+
+## Database Structure
+
+- **User**: Represents a user who can own multiple libraries
+  - Has a one-to-many relationship with Library
+  - When a user is deleted, all their libraries are deleted too
+
+- **Library**: Represents a game library owned by a user
+  - Has a many-to-one relationship with User
+  - Each library belongs to exactly one user
 
 ## Setup
 
-1. Clone the repository:
-```bash
-git clone [<repository-url>](https://github.com/crucialniccur/game-library-tracker)
-cd game-library-tracker
-```
-
-2. Create and activate a virtual environment:
+1. Create a virtual environment:
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Linux/Mac
-# or
-.\venv\Scripts\activate  # On Windows
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Install required dependencies:
+2. Install dependencies:
 ```bash
-pip install -r requirements.txt
+pip install sqlalchemy
 ```
 
-4. Initialize the database:
+3. Initialize the database:
 ```bash
-alembic upgrade head
+python -m lib.db.init_db
+```
+
+4. Run the application:
+```bash
+python -m lib.cli
 ```
 
 ## Usage
 
-The application provides a command-line interface with various commands. Here are the available commands:
+The application provides a simple menu-driven interface:
 
-### User Management
+1. Create User - Create a new user with a unique username
+2. List Users - Display all users and their libraries
+3. Create Library - Create a new library for a specific user
+4. List Libraries - Display all libraries or libraries for a specific user
+5. Delete User - Delete a user and all their libraries
+6. Delete Library - Delete a specific library
+0. Exit - Exit the application
+
+## Example
+
 ```bash
-# List all users
-game-tracker users
+=== Game Library Manager ===
+1. Create User
+2. List Users
+3. Create Library
+4. List Libraries
+5. Delete User
+6. Delete Library
+0. Exit
 
-# Add a new user
-game-tracker add-user "John Doe"
-```
+Enter your choice (0-6): 1
+Enter username: john_doe
 
-### Library Management
-```bash
-# Create a new library for a user
-game-tracker create-library "PC Games" "John Doe"
+Enter your choice (0-6): 3
+Enter user ID: 1
+Enter library title: PC Games
 
-# List all libraries
-game-tracker libraries
-```
-
-### Game Management
-```bash
-# Add a new game with optional parameters
-game-tracker add-game "The Witcher 3" "PC Games" --completion 75 --playtime 120.5 --rating 5
-
-# List games with various filters
-game-tracker list-games "PC Games"
-game-tracker list-games "PC Games" --completed
-game-tracker list-games "PC Games" --platform "PC" --genre "RPG"
-
-# Delete a game
-game-tracker delete-game "The Witcher 3" "PC Games"
-```
-
-### Statistics
-```bash
-# View library statistics
-game-tracker stats "PC Games"
+Enter your choice (0-6): 2
+Users:
+- john_doe (ID: 1)
+  Libraries:
+    - PC Games
 ```
 
 ## Input Validation
