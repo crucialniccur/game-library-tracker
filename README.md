@@ -12,46 +12,22 @@ A command-line interface application for managing users and their game libraries
 ## Prerequisites
 
 - Python 3.8 or higher
-- pip (Python package installer)
+- pipenv
 
-## Installation
+## Installation & Setup
 
-1. Clone the repository:
 ```bash
+# Clone the repository
 git clone <repository-url>
 cd game-library-tracker
-```
 
-2. Create a virtual environment:
-```bash
-python -m venv venv
-```
+# Install dependencies and activate virtual environment
+pipenv install
+pipenv shell
 
-3. Activate the virtual environment:
-- On Linux/macOS:
-  ```bash
-  source venv/bin/activate
-  ```
-- On Windows:
-  ```bash
-  .\venv\Scripts\activate
-  ```
-
-4. Install dependencies:
-```bash
-pip install sqlalchemy
-```
-
-## Database Setup
-
-1. Initialize the database with sample data:
-```bash
+# Initialize the database with sample data
 python3 seed.py
 ```
-
-This will create:
-- A SQLite database file (game_library.db)
-- Sample users and libraries
 
 ## Usage
 
@@ -126,6 +102,14 @@ The application includes error handling for:
 - Invalid library IDs
 - Empty input validation
 - Confirmation for delete operations
+
+## Troubleshooting
+
+If you encounter any issues:
+1. Exit the application (Option 0)
+2. Delete the database file: `rm game_library.db`
+3. Run `python3 seed.py` to start fresh
+4. Start the application again: `python3 -m app.cli`
 
 ## Contributing
 
