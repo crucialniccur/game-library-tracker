@@ -1,114 +1,80 @@
 # Game Library Manager
 
-A simple CLI application to manage game libraries. Users can create libraries and add games to them.
+A CLI application to manage your game libraries. Users can create libraries and add games to them with detailed information like genre, platform, and play status.
 
 ## Features
 
-- Create users
+- Create users with unique usernames
 - Create game libraries for users
-- Add games to libraries
+- Add games with detailed information (title, genre, platform, completion status)
 - View all data in a hierarchical structure
 
-## Setup
+## Prerequisites
 
-1. Create and activate virtual environment:
+- Python 3.8 or higher
+- Pipenv
+
+## Setup Instructions
+
+1. Clone and navigate to the project:
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+git clone <repository-url>
+cd game-library-tracker
 ```
 
-2. Install dependencies:
+2. Install dependencies using Pipenv:
 ```bash
-pip install -r requirements.txt
+pipenv install
+pipenv shell
 ```
 
-3. Seed the database with sample data:
+3. Initialize the database:
+```bash
+alembic upgrade head
+```
+
+4. (Optional) Seed the database with sample data:
 ```bash
 python seed.py
 ```
 
-4. Run the application:
+5. Run the application:
 ```bash
 python -m app.cli
-```
-
-## Usage Example
-
-```
-=== Game Library Manager ===
-1. Create User
-2. Create Library
-3. Add Game
-4. View All
-0. Exit
-
-Choose an option: 4
-
-User: john_doe
-  Library: PC Games
-    Game: The Witcher 3
-    Game: Cyberpunk 2077
-  Library: Console Games
-    Game: God of War
-
-User: alice_smith
-  Library: Mobile Games
-    Game: Pokemon GO
-```
-
-## Project Structure
-
-```
-game-library-tracker/
-├── lib/                    # Main package directory
-│   ├── __init__.py
-│   ├── cli.py             # CLI interface
-│   └── db/                # Database related code
-│       ├── __init__.py
-│       ├── database.py    # Database connection
-│       ├── init_db.py     # Database initialization
-│       └── models.py      # SQLAlchemy models
-├── .gitignore             # Git ignore file
-├── README.md              # Project documentation
-├── requirements.txt       # Python dependencies
-├── Pipfile               # Pipenv dependencies
-├── seed.py               # Database seeder
-└── alembic.ini           # Alembic migrations config
 ```
 
 ## Usage
 
 The application provides a simple menu-driven interface:
 
-1. Create User - Create a new user with a unique username
-2. Create Library - Create a new library for a specific user
-3. Add Game - Add a game to a specific library
-4. View All - View all users and their libraries
-0. Exit - Exit the application
+1. **Create User** - Create a new user with a unique username
+2. **Create Library** - Create a new library for a specific user
+3. **Add Game** - Add a game to a specific library with the following details:
+   - Title
+   - Genre
+   - Platform
+   - Completion status (optional)
+   - Play time (optional)
+   - Rating (optional)
+4. **View All** - View all users and their libraries
+0. **Exit** - Exit the application
 
-## Example
+## Example Output
 
-```bash
+```
 === Game Library Manager ===
-1. Create User
-2. Create Library
-3. Add Game
-4. View All
-0. Exit
-
-Enter your choice (0-4): 4
 Users:
-- john_gamer (ID: 1)
+- john_doe
   Libraries:
     - PC Games
-    - PlayStation Games
-- alice_player (ID: 2)
+      - The Witcher 3 (RPG, PC)
+      - Cyberpunk 2077 (RPG, PC)
+    - Console Games
+      - God of War (Action-Adventure, PlayStation)
+- alice_smith
   Libraries:
-    - Nintendo Switch
     - Mobile Games
-- bob_games (ID: 3)
-  Libraries:
-    - Xbox Collection
+      - Pokemon GO (AR, Mobile)
 ```
 
 ## Database Schema
@@ -122,12 +88,23 @@ Users:
 - title (String)
 - user_id (Foreign Key to Users)
 
+### Games
+- id (Primary Key)
+- title (String)
+- genre (String)
+- platform (String)
+- completed (Boolean, Optional)
+- play_time (Integer, Optional)
+- rating (Integer, Optional)
+- library_id (Foreign Key to Libraries)
+
 ## Error Handling
 
 The application includes error handling for:
 - Duplicate usernames
 - Invalid user IDs
 - Invalid library IDs
+- Missing required game information
 - Database connection issues
 
 All errors are displayed with clear, user-friendly messages.

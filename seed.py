@@ -28,10 +28,30 @@ def seed_data():
 
     # Add games
     games = [
-        Game(title="The Witcher 3", library=pc_lib),
-        Game(title="Cyberpunk 2077", library=pc_lib),
-        Game(title="God of War", library=console_lib),
-        Game(title="Pokemon GO", library=mobile_lib)
+        Game(
+            title="The Witcher 3",
+            genre="RPG",
+            platform="PC",
+            library=pc_lib
+        ),
+        Game(
+            title="Cyberpunk 2077",
+            genre="RPG",
+            platform="PC",
+            library=pc_lib
+        ),
+        Game(
+            title="God of War",
+            genre="Action-Adventure",
+            platform="PlayStation",
+            library=console_lib
+        ),
+        Game(
+            title="Pokemon GO",
+            genre="AR",
+            platform="Mobile",
+            library=mobile_lib
+        )
     ]
     session.add_all(games)
     session.commit()

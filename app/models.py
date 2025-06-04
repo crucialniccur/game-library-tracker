@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -21,6 +21,11 @@ class Library(Base):
 class Game(Base):
     __tablename__ = 'games'
     id = Column(Integer, primary_key=True)
-    title = Column(String)
+    title = Column(String, nullable=False)
+    genre = Column(String, nullable=False)
+    platform = Column(String, nullable=False)
+    completed = Column(Boolean, default=False)
+    play_time = Column(Integer, default=0)
+    rating = Column(Integer, default=None)
     library_id = Column(Integer, ForeignKey('libraries.id'))
     library = relationship('Library', back_populates='games')
