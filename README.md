@@ -1,102 +1,122 @@
-# Game Library Manager
+# Game Library Manager CLI
 
-A CLI application to manage your game libraries. Users can create libraries and add games to them with detailed information like genre, platform, and play status.
+A command-line interface application for managing users and their game libraries. Built with Python and SQLAlchemy.
 
 ## Features
 
-- Create users with unique usernames
-- Create game libraries for users
-- Add games with detailed information (title, genre, platform, completion status)
-- View all data in a hierarchical structure
+- User Management (Create, Read, Update, Delete)
+- Library Management (Create, Read, Update, Delete)
+- One-to-Many relationship between Users and Libraries
+- Data persistence using SQLite database
 
 ## Prerequisites
 
 - Python 3.8 or higher
-- Pipenv
+- pip (Python package installer)
 
-## Setup Instructions
+## Installation
 
-1. Clone and navigate to the project:
+1. Clone the repository:
 ```bash
 git clone <repository-url>
 cd game-library-tracker
 ```
 
-2. Install dependencies using Pipenv:
+2. Create a virtual environment:
 ```bash
-pipenv install
-pipenv shell
+python -m venv venv
 ```
 
-3. Initialize the database:
+3. Activate the virtual environment:
+- On Linux/macOS:
+  ```bash
+  source venv/bin/activate
+  ```
+- On Windows:
+  ```bash
+  .\venv\Scripts\activate
+  ```
+
+4. Install dependencies:
 ```bash
-alembic upgrade head
+pip install sqlalchemy
 ```
 
-4. (Optional) Seed the database with sample data:
+## Database Setup
+
+1. Initialize the database with sample data:
 ```bash
-python seed.py
+python3 seed.py
 ```
 
-5. Run the application:
-```bash
-python -m app.cli
-```
+This will create:
+- A SQLite database file (game_library.db)
+- Sample users and libraries
 
 ## Usage
 
-The application provides a simple menu-driven interface:
-
-1. **Create User** - Create a new user with a unique username
-2. **Create Library** - Create a new library for a specific user
-3. **Add Game** - Add a game to a specific library with the following details:
-   - Title
-   - Genre
-   - Platform
-   - Completion status (optional)
-   - Play time (optional)
-   - Rating (optional)
-4. **View All** - View all users and their libraries
-0. **Exit** - Exit the application
-
-## Example Output
-
+1. Start the CLI application:
+```bash
+python3 -m app.cli
 ```
-=== Game Library Manager ===
-Users:
-- john_doe
-  Libraries:
-    - PC Games
-      - The Witcher 3 (RPG, PC)
-      - Cyberpunk 2077 (RPG, PC)
-    - Console Games
-      - God of War (Action-Adventure, PlayStation)
-- alice_smith
-  Libraries:
-    - Mobile Games
-      - Pokemon GO (AR, Mobile)
+
+2. Available Commands:
+```
+1. List Users
+2. List Libraries
+3. Create User
+4. Update User
+5. Delete User
+6. Create Library
+7. Update Library
+8. Delete Library
+0. Exit
+```
+
+### Example Workflow
+
+1. Create a new user:
+```
+Choose option: 3
+Enter username: Alex
+```
+
+2. Create libraries for the user:
+```
+Choose option: 6
+# You'll see list of users with their IDs
+Enter user ID: (enter Alex's ID)
+Enter library title: PS5 Games
+```
+
+3. View all libraries:
+```
+Choose option: 2
+# Press Enter when asked for user ID to see all libraries
+```
+
+4. View libraries for specific user:
+```
+Choose option: 2
+Enter user ID: (enter user's ID)
 ```
 
 ## Database Schema
 
-### Users
+### Users Table
 - id (Primary Key)
-- username (String, Unique)
+- username (Unique, Non-nullable)
 
-### Libraries
+### Libraries Table
 - id (Primary Key)
-- title (String)
-- user_id (Foreign Key to Users)
+- title (Non-nullable)
+- user_id (Foreign Key to users.id)
 
-### Games
-- id (Primary Key)
-- title (String)
-- genre (String)
-- platform (String)
-- completed (Boolean, Optional)
-- play_time (Integer, Optional)
-- rating (Integer, Optional)
-- library_id (Foreign Key to Libraries)
+### Relationships
+- One-to-Many relationship between User and Library
+- One user can have multiple libraries
+- Each library belongs to exactly one user
+- When a user is deleted, all their libraries are automatically deleted (cascade delete)
 
 ## Error Handling
 
@@ -104,7 +124,17 @@ The application includes error handling for:
 - Duplicate usernames
 - Invalid user IDs
 - Invalid library IDs
-- Missing required game information
-- Database connection issues
+- Empty input validation
+- Confirmation for delete operations
 
-All errors are displayed with clear, user-friendly messages.
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
