@@ -18,7 +18,7 @@ A command-line interface application for managing users and their game libraries
 
 ```bash
 # Clone the repository
-git clone [<repository-url>](https://github.com/crucialniccur/game-library-tracker)
+git clone https://github.com/crucialniccur/game-library-tracker
 cd game-library-tracker
 
 # Install dependencies and activate virtual environment
