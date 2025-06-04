@@ -51,11 +51,7 @@ The application provides a simple menu-driven interface:
 2. **Create Library** - Create a new library for a specific user
 3. **Add Game** - Add a game to a specific library with the following details:
    - Title
-   - Genre
-   - Platform
-   - Completion status (optional)
-   - Play time (optional)
-   - Rating (optional)
+
 4. **View All** - View all users and their libraries
 0. **Exit** - Exit the application
 
