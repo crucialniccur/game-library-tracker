@@ -1,3 +1,6 @@
+# SQLite database files
+*.db
+
 # Python
 __pycache__/
 *.py[cod]
@@ -28,7 +31,3 @@ ENV/
 .vscode/
 *.swp
 *.swo
-
-# Database
-*.db
-*.sqlite3
