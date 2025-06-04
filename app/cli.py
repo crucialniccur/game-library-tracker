@@ -11,12 +11,6 @@ def list_users(session):
     print("\n=== Users ===")
     for user in users:
         print(f"ID: {user.id}, Username: {user.username}")
-        if user.libraries:
-            print("  Libraries:")
-            for lib in user.libraries:
-                print(f"    - {lib.title} (ID: {lib.id})")
-        else:
-            print("  No libraries")
 
 def list_libraries(session, user_id=None):
     """List all libraries or libraries for a specific user"""
@@ -29,7 +23,7 @@ def list_libraries(session, user_id=None):
         print(f"\n=== Libraries for {user.username} ===")
     else:
         libraries = session.query(Library).all()
-        print("\n=== All Libraries ===")
+        print("\n=== Libraries ===")
 
     if not libraries:
         print("No libraries found")
@@ -62,6 +56,7 @@ def create_user(session):
 
 def update_user(session):
     """Update a user's username"""
+    print("\n=== Available Users ===")
     list_users(session)
     user_id = input("\nEnter user ID to update: ")
 
@@ -91,6 +86,7 @@ def update_user(session):
 
 def delete_user(session):
     """Delete a user and all their libraries"""
+    print("\n=== Available Users ===")
     list_users(session)
     user_id = input("\nEnter user ID to delete: ")
 
@@ -114,7 +110,9 @@ def delete_user(session):
 
 def create_library(session):
     """Create a new library"""
+    print("\n=== Available Users ===")
     list_users(session)
+
     user_id = input("\nEnter user ID: ")
     title = input("Enter library title: ")
 
@@ -140,6 +138,7 @@ def create_library(session):
 
 def update_library(session):
     """Update a library's title"""
+    print("\n=== Available Libraries ===")
     list_libraries(session)
     library_id = input("\nEnter library ID to update: ")
 
@@ -169,6 +168,7 @@ def update_library(session):
 
 def delete_library(session):
     """Delete a library"""
+    print("\n=== Available Libraries ===")
     list_libraries(session)
     library_id = input("\nEnter library ID to delete: ")
 
