@@ -1,5 +1,27 @@
-from .database import get_session
-from .models import User, Library, Game
+from app.database import get_session
+from app.models import User, Library, Game
+
+def list_users(session):
+    """List all users"""
+    users = session.query(User).all()
+    if not users:
+        print("\nNo users found")
+        return
+
+    print("\n=== Users ===")
+    for user in users:
+        print(f"ID: {user.id}, Username: {user.username}")
+
+def list_libraries(session):
+    """List all libraries"""
+    libraries = session.query(Library).all()
+    if not libraries:
+        print("\nNo libraries found")
+        return
+
+    print("\n=== Libraries ===")
+    for lib in libraries:
+        print(f"ID: {lib.id}, Title: {lib.title}, Owner: {lib.user.username}")
 
 def create_user(session):
     """Create a new user"""
@@ -15,11 +37,7 @@ def create_user(session):
 
 def create_library(session):
     """Create a new library"""
-    print("\nAvailable users:")
-    users = session.query(User).all()
-    for user in users:
-        print(f"ID: {user.id}, Username: {user.username}")
-
+    list_users(session)
     user_id = input("\nEnter user ID: ")
     title = input("Enter library title: ")
 
@@ -34,17 +52,20 @@ def create_library(session):
 
 def add_game(session):
     """Add a game to a library"""
-    print("\nAvailable libraries:")
-    libraries = session.query(Library).all()
-    for lib in libraries:
-        print(f"ID: {lib.id}, Title: {lib.title}, Owner: {lib.user.username}")
-
+    list_libraries(session)
     library_id = input("\nEnter library ID: ")
     title = input("Enter game title: ")
+    genre = input("Enter game genre: ")
+    platform = input("Enter game platform: ")
 
     library = session.query(Library).filter_by(id=library_id).first()
     if library:
-        game = Game(title=title, library_id=library.id)
+        game = Game(
+            title=title,
+            genre=genre,
+            platform=platform,
+            library_id=library.id
+        )
         session.add(game)
         session.commit()
         print(f"Added game '{title}' to library '{library.title}'")
@@ -65,7 +86,7 @@ def view_all(session):
                 print(f"  Library: {library.title}")
                 if library.games:
                     for game in library.games:
-                        print(f"    Game: {game.title}")
+                        print(f"    Game: {game.title} ({game.genre}, {game.platform})")
                 else:
                     print("    No games")
         else:
@@ -74,10 +95,12 @@ def view_all(session):
 def main_menu():
     """Display main menu"""
     print("\n=== Game Library Manager ===")
-    print("1. Create User")
-    print("2. Create Library")
-    print("3. Add Game")
-    print("4. View All")
+    print("1. List Users")
+    print("2. List Libraries")
+    print("3. Create User")
+    print("4. Create Library")
+    print("5. Add Game")
+    print("6. View All")
     print("0. Exit")
     return input("Choose an option: ")
 
@@ -89,12 +112,16 @@ def main():
         choice = main_menu()
 
         if choice == "1":
-            create_user(session)
+            list_users(session)
         elif choice == "2":
-            create_library(session)
+            list_libraries(session)
         elif choice == "3":
-            add_game(session)
+            create_user(session)
         elif choice == "4":
+            create_library(session)
+        elif choice == "5":
+            add_game(session)
+        elif choice == "6":
             view_all(session)
         elif choice == "0":
             print("Goodbye!")
